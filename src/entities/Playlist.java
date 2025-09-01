@@ -7,17 +7,46 @@ public class Playlist {
     private String nome;
 
     private Usuario usuario;
-    private List<Musica> musicas = new ArrayList<Musica>();
+    private List<Midia> midias = new ArrayList<Midia>();
+
+    public Playlist(String nome, Usuario usuario) {
+        this.nome = nome;
+        this.usuario = usuario;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public double getDuracaoTotal() {
         double duracaoTotal = 0;
-        for (Musica musica : musicas) {
-            duracaoTotal += musica.getDuracao();
+        for (Midia midia : midias) {
+            duracaoTotal += midia.getDuracao();
         }
         return duracaoTotal;
     }
 
-    public List<Musica> getMusicas() {
-        return musicas;
+    public List<Midia> getMidias() {
+        return midias;
+    }
+
+    public void addMidia(Midia midia) {
+        midias.add(midia);
+    }
+
+    public void removeMidia(Midia midia) {
+        midias.remove(midia);
     }
 }

@@ -10,6 +10,11 @@ public class Usuario {
 
     private List<Playlist> playlists = new ArrayList<Playlist>();
 
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
     public String getNome() {
         return nome;
     }
@@ -33,15 +38,37 @@ public class Usuario {
     public List<Playlist> getPlaylists() {
         return playlists;
     }
-    public void addPlaylist(Playlist playlist) {
+    public void addPlaylist(String nomeDaPlaylist) {
+
+        Playlist playlist = new Playlist(nomeDaPlaylist, this);
         this.playlists.add(playlist);
     }
 
-    public void removePlaylist(Playlist playlist) {
-        this.playlists.remove(playlist);
+    public void removePlaylistByName(String nomeDaPlaylist) {
+
+        for(Playlist playlist : playlists) {
+            if (playlist.getNome().equals(nomeDaPlaylist)) {
+                this.playlists.remove(playlist);
+            }
+        }
     }
 
-    public void addMidia(Playlist playlist, Musica musica) {
-        playlist.getMusicas().add(musica);
+    public void addMidiaPlaylist(String nomeDaPlaylist, Midia midia) {
+
+        for (Playlist playlist : playlists) {
+            if (playlist.getNome().equals(nomeDaPlaylist)) {
+                playlist.addMidia(midia);
+            }
+        }
     }
+
+    public void removeMidiaPlaylist(String nomeDaPlaylist, Midia midia) {
+
+        for (Playlist playlist : playlists) {
+            if (playlist.getNome().equals(nomeDaPlaylist)) {
+                playlist.removeMidia(midia);
+            }
+        }
+    }
+
 }

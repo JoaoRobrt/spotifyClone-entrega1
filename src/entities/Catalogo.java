@@ -7,11 +7,13 @@ public class Catalogo {
 
     private List<Midia> midias = new ArrayList<Midia>();
 
-    public List<Midia> getMidiasByGenero(Genero genero) {
+    public List<Midia> getMidiasByGenero(String descricao) {
         List<Midia> midiasByGenero = new ArrayList<Midia>();
         for (Midia midia : midias) {
-            if (midia.getGeneros().contains(genero)) {
-                midiasByGenero.add(midia);
+            for (Genero genero : midia.getGeneros()) {
+                if(genero.getDescricao().equals(descricao)) {
+                    midiasByGenero.add(midia);
+                }
             }
         }
         return midiasByGenero;
