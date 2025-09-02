@@ -17,4 +17,13 @@ public enum GeneroMusica implements Genero {
     public String getDescricao() {
         return descricao;
     }
+
+    public static GeneroMusica valueOfDescricao(String texto) {
+        for (GeneroMusica genero : values()) {
+            if (genero.descricao.equalsIgnoreCase(texto)) {
+                return genero;
+            }
+        }
+        return null;
+    }
 }

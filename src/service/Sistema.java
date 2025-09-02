@@ -4,17 +4,20 @@ import entities.*;
 import exceptions.*;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Sistema {
     private Catalogo catalogo;
     private Admin admin;
-    private List<Usuario> usuariosCadastrados = new ArrayList<Usuario>();
+    private List<Usuario> usuariosCadastrados;
     private Usuario usuarioLogado;
 
     public Sistema() {
-       this.usuariosCadastrados = new ArrayList<Usuario>();
+        this.catalogo = new Catalogo();
+        this.admin = new Admin("admin", "admin@gmail.com", "admin");
+        this.usuariosCadastrados = new ArrayList<Usuario>();
     }
 
     public Usuario getUsuarioLogado() {
@@ -81,7 +84,10 @@ public class Sistema {
             System.out.println("Nenhuma playlist cadastrada");
         }else{
             for (int i = 0; i < usuarioLogado.getPlaylists().size(); i++) {
-                System.out.println(i + " * " + usuarioLogado.getPlaylists().get(i).getNome());
+                System.out.println(i+1 + " * " + usuarioLogado.getPlaylists().get(i).getNome());
+                for(Midia midia : usuarioLogado.getPlaylists().get(i).getMidias()){
+                    System.out.println(midia.getTitulo());
+                }
             }
         }
 
@@ -103,24 +109,139 @@ public class Sistema {
 
     }
 
-    public void adicionarMidiaAPlaylist(Scanner scan) throws PlaylistNaoEncontradaException, MidiaNaoEncontradaException {
+    public void adicionarMidiaAPlaylist(Scanner scanner) throws PlaylistNaoEncontradaException, MidiaNaoEncontradaException {
         System.out.println("Digite o nome da playlist: ");
-        String nomePlaylist = scan.nextLine();
+        String nomePlaylist = scanner.nextLine();
         System.out.println("Digite o nome da midia: ");
-        String nomeMidia = scan.nextLine();
+        String nomeMidia = scanner.nextLine();
 
         Midia midia = catalogo.getMidiaByTitulo(nomeMidia);
         usuarioLogado.addMidiaPlaylist(nomePlaylist, midia);
     }
 
-    public void removerMidiaDaPlaylist(Scanner scan) throws PlaylistNaoEncontradaException, MidiaNaoEncontradaException {
+    public void removerMidiaDaPlaylist(Scanner scanner) throws PlaylistNaoEncontradaException, MidiaNaoEncontradaException {
         System.out.println("Digite o nome da playlist: ");
-        String nomePlaylist = scan.nextLine();
+        String nomePlaylist = scanner.nextLine();
         System.out.println("Digite o nome da midia: ");
-        String nomeMidia = scan.nextLine();
+        String nomeMidia = scanner.nextLine();
 
         Midia midia = catalogo.getMidiaByTitulo(nomeMidia);
         usuarioLogado.removeMidiaPlaylist(nomePlaylist, midia);
+    }
+
+    public void adicionarMidiaAoCatalogo(Scanner scanner) throws RecursoNaoEncontradoException, IllegalArgumentException, ArtistaNaoEncontradoException {
+    System.out.println("Digite o nome da midia: ");
+    String nomeMidia = scanner.nextLine();
+    System.out.println("Digite o nome do artista: ");
+    String nomeArtista = scanner.nextLine();
+    Artista artista = catalogo.getArtistaByNome(nomeArtista);
+
+    double duracao;
+    try {
+        System.out.println("Digite a duração da musica: ");
+        duracao = scanner.nextDouble();
+    }catch (InputMismatchException e) {
+        System.out.println("Duração inválida!");
+        scanner.nextLine();
+        return;
+    }
+
+    System.out.println("Selecione o tipo de Midia: ");
+    System.out.println("1 - Musica\n2 - AudioBook\n3 - PodCast");
+    int tipoMidia = scanner.nextInt();
+    scanner.nextLine();
+  switch (tipoMidia) {
+    case 1:
+        Musica musica = new Musica( nomeMidia, duracao, artista);
+        System.out.println("Digite o nome do genero: ");
+        System.out.println("1 - Rock\n2 - Pop\n3 - MPB\n4 - Jazz\n5 - Classic");
+        String nomeGeneroMusica = scanner.nextLine();
+        GeneroMusica generoMusica = GeneroMusica.valueOfDescricao(nomeGeneroMusica);
+
+        musica.addGenero(generoMusica);
+
+        catalogo.addMidia(musica);
+        break;
+    case 2:
+        AudioBook audioBook = new AudioBook( nomeMidia, duracao, artista);
+        System.out.println("Digite o nome do genero: ");
+        System.out.println("1 - Ficcao\n2 - Romance\n3 - Aventura\n4 - Drama");
+        String nomeGeneroAudioBook = scanner.nextLine();
+        GeneroAudioBook generoAudioBook = GeneroAudioBook.valueOfDescricao(nomeGeneroAudioBook);
+        audioBook.addGenero(generoAudioBook);
+
+        catalogo.addMidia(audioBook);
+        break;
+    case 3:
+        PodCast podCast = new PodCast( nomeMidia, duracao, artista);
+        System.out.println("Digite o nome do genero: ");
+        System.out.println("1 - Humor\n2 - Notícias\n3 - Cultura\n4 - Esportes");
+        String nomeGeneroPodCast = scanner.nextLine();
+        GeneroPodCast generoPodCast = GeneroPodCast.valueOfDescricao(nomeGeneroPodCast);
+        podCast.addGenero(generoPodCast);
+
+        catalogo.addMidia(podCast);
+        break;
+
+    }
+  }
+
+    public void removerMidiaDoCatalogo(Scanner scanner) throws RecursoNaoEncontradoException {
+        System.out.println("Digite o nome da midia: ");
+        String nomeMidia = scanner.nextLine();
+
+        catalogo.removeMidia(nomeMidia);
+    }
+
+    public void listarMidias() {
+        if (catalogo.getMidias().isEmpty()) {
+            System.out.println("Nenhuma midia cadastrada");
+        }else{
+            for (int i = 0; i < catalogo.getMidias().size(); i++) {
+                System.out.println(i+1 + " * " + catalogo.getMidias().get(i).getTitulo());
+            }
+        }
+
+    }
+
+    public void adicionarArtistaAoCatalogo(Scanner scanner) throws ArtistaJaCadastradoException {
+        System.out.println("Digite o nome do artista: ");
+        String nomeArtista = scanner.nextLine();
+        catalogo.addArtista(nomeArtista);
+    }
+
+    public void removerArtistaDoCatalogo(Scanner scanner) throws ArtistaNaoEncontradoException {
+    System.out.println("Digite o id do artista: ");
+    int idArtista = scanner.nextInt();
+    scanner.nextLine();
+
+    catalogo.removeArtistaById(idArtista);
+    }
+
+    public void listarArtistas() {
+        if (catalogo.getArtistas().isEmpty()) {
+            System.out.println("Nenhum artista cadastrado");
+        } else {
+            for (int i = 0; i < catalogo.getArtistas().size(); i++) {
+                System.out.println(i + 1 + " * " + catalogo.getArtistas().get(i).getNome());
+            }
+        }
+    }
+
+    public void listarUsuarios() {
+        if (usuariosCadastrados.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado");
+        }else{
+            for (int i = 0; i < usuariosCadastrados.size(); i++) {
+                System.out.println(i+1 + " * " + usuariosCadastrados.get(i).getNome());
+            }
+        }
+
+    }
+
+    public void logout(){
+        System.out.println("Deslogado com sucesso!");
+        this.usuarioLogado = null;
     }
 }
 

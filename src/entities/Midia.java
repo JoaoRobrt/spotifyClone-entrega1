@@ -45,5 +45,9 @@ public abstract class Midia {
         return generos;
     }
 
+    public void addGenero(Genero genero) {
+        this.generos.add(genero);
+    }
+
 
 }

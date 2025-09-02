@@ -15,4 +15,13 @@ public enum GeneroAudioBook implements Genero {
     public String getDescricao() {
         return descricao;
     }
+
+    public static GeneroAudioBook valueOfDescricao(String texto) {
+        for (GeneroAudioBook genero : values()) {
+            if (genero.descricao.equalsIgnoreCase(texto)) {
+                return genero;
+            }
+        }
+        return null;
+    }
 }
