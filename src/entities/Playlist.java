@@ -47,6 +47,9 @@ public class Playlist {
     }
 
     public void removeMidia(Midia midia) {
+        if (!midias.contains(midia)) {
+            return;
+        }
         midias.remove(midia);
     }
 }

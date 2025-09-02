@@ -1,5 +1,8 @@
 package entities;
 
+import exceptions.PlaylistJaCriadaException;
+import exceptions.PlaylistNaoEncontradaException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,18 +18,23 @@ public class Usuario {
         this.email = email;
         this.senha = senha;
     }
+
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getSenha() {
         return senha;
     }
@@ -38,37 +46,56 @@ public class Usuario {
     public List<Playlist> getPlaylists() {
         return playlists;
     }
-    public void addPlaylist(String nomeDaPlaylist) {
 
-        Playlist playlist = new Playlist(nomeDaPlaylist, this);
-        this.playlists.add(playlist);
-    }
-
-    public void removePlaylistByName(String nomeDaPlaylist) {
-
-        for(Playlist playlist : playlists) {
-            if (playlist.getNome().equals(nomeDaPlaylist)) {
-                this.playlists.remove(playlist);
-            }
-        }
-    }
-
-    public void addMidiaPlaylist(String nomeDaPlaylist, Midia midia) {
-
+    public Playlist buscarPlaylist(String nomeDaPlaylist) {
         for (Playlist playlist : playlists) {
             if (playlist.getNome().equals(nomeDaPlaylist)) {
-                playlist.addMidia(midia);
+                return playlist;
             }
+        }
+        return null;
+    }
+
+    public void criarPlaylist(String nomeDaPlaylist) throws PlaylistJaCriadaException {
+
+        if(buscarPlaylist(nomeDaPlaylist) == null) {
+            Playlist playlist = new Playlist(nomeDaPlaylist, this);
+            this.playlists.add(playlist);
+        }else{
+            throw new PlaylistJaCriadaException("Playlist ja cadastrada");
         }
     }
 
-    public void removeMidiaPlaylist(String nomeDaPlaylist, Midia midia) {
+    public void removePlaylistByName(String nomeDaPlaylist) throws PlaylistNaoEncontradaException {
+        Playlist playlistEncontrada = buscarPlaylist(nomeDaPlaylist);
 
-        for (Playlist playlist : playlists) {
-            if (playlist.getNome().equals(nomeDaPlaylist)) {
-                playlist.removeMidia(midia);
-            }
+        if (playlistEncontrada != null) {
+            this.playlists.remove(playlistEncontrada);
+        } else {
+            throw new PlaylistNaoEncontradaException("Playlist nao encontrada");
+        }
+
+    }
+
+    public void addMidiaPlaylist(String nomeDaPlaylist, Midia midia) throws PlaylistNaoEncontradaException{
+        Playlist playlistEncontrada = buscarPlaylist(nomeDaPlaylist);
+
+        if (playlistEncontrada != null) {
+            playlistEncontrada.addMidia(midia);
+        } else {
+            throw new PlaylistNaoEncontradaException("Playlist nao encontrada");
         }
     }
+
+    public void removeMidiaPlaylist(String nomeDaPlaylist, Midia midia) throws PlaylistNaoEncontradaException{
+        Playlist playlistEncontrada = buscarPlaylist(nomeDaPlaylist);
+
+        if (playlistEncontrada != null) {
+            playlistEncontrada.removeMidia(midia);
+        } else {
+            throw new PlaylistNaoEncontradaException("Playlist nao encontrada");
+        }
+    }
+
 
 }
