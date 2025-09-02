@@ -18,6 +18,8 @@ public class Sistema {
         this.catalogo = new Catalogo();
         this.admin = new Admin("admin", "admin@gmail.com", "admin");
         this.usuariosCadastrados = new ArrayList<Usuario>();
+
+        popularDadosIniciais();
     }
 
     public Usuario getUsuarioLogado() {
@@ -242,6 +244,62 @@ public class Sistema {
     public void logout(){
         System.out.println("Deslogado com sucesso!");
         this.usuarioLogado = null;
+    }
+
+    private void popularDadosIniciais() {
+        System.out.println("Populando o sistema com dados iniciais...");
+
+        // --- Criando Artistas ---
+        catalogo.addArtista("Queen");
+        catalogo.addArtista("Legião Urbana");
+        catalogo.addArtista("Dua Lipa");
+        catalogo.addArtista("Caetano Veloso");
+        catalogo.addArtista("Miles Davis");
+        catalogo.addArtista("Jovem Nerd e Azaghal");
+        catalogo.addArtista("Folha de S.Paulo");
+        catalogo.addArtista("Machado de Assis");
+        catalogo.addArtista("J.K. Rowling");
+
+        // --- Criando Músicas ---
+        Musica m1 = new Musica("Bohemian Rhapsody", 5.92,catalogo.getArtistaByNome("Queen"));
+        m1.addGenero(GeneroMusica.ROCK);
+        catalogo.addMidia(m1);
+
+        Musica m2 = new Musica("Tempo Perdido", 5.03, catalogo.getArtistaByNome("Legião Urbana"));
+        m2.addGenero(GeneroMusica.ROCK);
+        catalogo.addMidia(m2);
+
+        Musica m3 = new Musica("Don't Start Now", 3.05, catalogo.getArtistaByNome("Dua Lipa"));
+        m3.addGenero(GeneroMusica.POP);
+        catalogo.addMidia(m3);
+
+        Musica m4 = new Musica("Sozinho", 2.98, catalogo.getArtistaByNome("Caetano Veloso"));
+        m4.addGenero(GeneroMusica.MPB);
+        catalogo.addMidia(m4);
+
+        Musica m5 = new Musica("So What", 9.39, catalogo.getArtistaByNome("Miles Davis"));
+        m5.addGenero(GeneroMusica.JAZZ);
+        catalogo.addMidia(m5);
+
+        // --- Criando Podcasts ---
+        PodCast p1 = new PodCast("NerdCast RPG: Cthulhu 1", 115.0, catalogo.getArtistaByNome("Jovem Nerd e Azaghal"));
+        p1.addGenero(GeneroPodCast.HUMOR);
+        catalogo.addMidia(p1);
+
+        PodCast p2 = new PodCast("O Atentado na Eslováquia", 25.5, catalogo.getArtistaByNome("Folha de S.Paulo"));
+        p2.addGenero(GeneroPodCast.NOTICIAS);
+        catalogo.addMidia(p2);
+
+        // --- Criando AudioBooks ---
+        AudioBook a1 = new AudioBook("Dom Casmurro", 480.0, catalogo.getArtistaByNome("Machado de Assis"));
+        a1.addGenero(GeneroAudioBook.ROMANCE);
+        catalogo.addMidia(a1);
+
+        AudioBook a2 = new AudioBook("Harry Potter e a Pedra Filosofal", 550.0, catalogo.getArtistaByNome("J.K. Rowling"));
+        a2.addGenero(GeneroAudioBook.AVENTURA);
+        catalogo.addMidia(a2);
+
+        System.out.println("Dados carregados!");
     }
 }
 
